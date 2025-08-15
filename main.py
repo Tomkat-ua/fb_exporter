@@ -33,12 +33,13 @@ if __name__ == "__main__":
     get_data()
     print('Start metrics server on http://localhost:'+str(http_server_port))
     start_http_server(http_server_port)
-    info.labels(app_name, app_ver)
     while True:
         # try:
         #     fb_monitoring.labels('reload proc', db.db_path).set(0)
             for row in get_data():
-                fb_monitoring.labels(row[0], db.db_path).set(row[1])
+                param = row[0]
+                value = float(row[1])
+                fb_monitoring.labels(param.strip(), db.db_path).set(value)
             time.sleep(15)
         # except Exception as e:
         #     fb_monitoring.labels('reload proc', db.db_path).set(1)
