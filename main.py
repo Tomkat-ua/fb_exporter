@@ -9,10 +9,18 @@ load_dotenv()
 app_name = 'Firebird Exporter'
 app_ver = '0.0.1'
 http_server_port = 5000
-sql = os.getenv('SQL')
+# sql = os.getenv('SQL')
+
+
 
 fb_monitoring = Gauge('fb_monitoring','FB Monitoring Data',['param','db'])
 info= Info('app','Application about',['name','version'])
+
+def get_sql(filename):
+    with open(filename) as file:
+        sql_mon = file.read()
+        file.close()
+    return sql_mon
 
 def get_data():
     try:
@@ -28,6 +36,7 @@ def get_data():
         return str(e)
 
 info.labels(app_name, app_ver)
+sql = get_sql(os.getenv('SQL_FILE'))
 
 if __name__ == "__main__":
     get_data()
